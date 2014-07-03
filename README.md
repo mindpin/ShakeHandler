@@ -8,7 +8,7 @@ Android ShakeHandler
 ### 安装
 ```
 git clone https://github.com/mindpin/ShakeHandler
-cd DataStatusHandler
+cd ShakeHandler
 mvn clean install
 ```
 
