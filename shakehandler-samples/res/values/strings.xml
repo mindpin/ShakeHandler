@@ -2,7 +2,7 @@
 <resources>
 
 	<string name="app_name">shakehandler-samples</string>
-	<string name="action_settings">Settings</string>
 	<string name="shake">摇一摇!</string>
+    <string name="result">结果：</string>
 
 </resources>

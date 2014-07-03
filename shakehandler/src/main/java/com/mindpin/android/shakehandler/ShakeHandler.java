@@ -27,6 +27,10 @@ public class ShakeHandler implements ShakeDetector.Listener {
     ShakeDetector sd;
     Map<String, String> params, postParams;
 
+    public interface CallbackListener {
+        public void callback(String json);
+    }
+
     public String get_location_params() {
         Location location = get_location();
         HashMap<String, String> hashMap = new HashMap<String, String>();
@@ -44,10 +48,6 @@ public class ShakeHandler implements ShakeDetector.Listener {
         hashMap.put("speed", String.valueOf(location.getSpeed()));
         hashMap.put("time", String.valueOf(location.getTime()));
         return new Gson().toJson(hashMap);
-    }
-
-    public interface CallbackListener {
-        public void callback(String json);
     }
 
     public ShakeHandler(Context context) {
@@ -79,6 +79,10 @@ public class ShakeHandler implements ShakeDetector.Listener {
         params.put(param_name, param);
     }
 
+    public void add_http_param(String param_name, ParamGetter pg){
+        params.put(param_name, pg.get_param_value(pg.t));
+    }
+
     public void set_cookie(String cookie) {
         this.cookie = cookie;
     }
@@ -95,8 +99,7 @@ public class ShakeHandler implements ShakeDetector.Listener {
             request.header("Cookie", cookie);
         postParams = new HashMap<String, String>(params);
         postParams.put("location", get_location_params());
-        Log.d(TAG, "params:" + new Gson().toJson(params));
-        Log.d(TAG, "get_location_params():" + new Gson().toJson(get_location_params()));
+        Log.d(TAG, "postParams:" + new Gson().toJson(postParams));
         new RequestTask().execute(request);
     }
 
