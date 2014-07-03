@@ -36,3 +36,7 @@ AndroidManifest.xml 添加如下权限
 ## 使用说明
 请参考示例
 
+## 依赖库
+* [seismic][1]
+
+[1]: https://github.com/square/seismic
