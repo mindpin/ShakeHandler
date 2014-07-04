@@ -34,6 +34,28 @@ public class ShakeHandler implements ShakeDetector.Listener {
 
     public String get_location_params() {
         Location location = get_location();
+        if (location != null)
+            return get_location_params_json(location);
+        else
+            return get_location_blank_json();
+    }
+
+    private String get_location_blank_json() {
+        HashMap<String, String> hashMap = new HashMap<String, String>();
+        hashMap.put("accuracy", "");
+        hashMap.put("altitude", "");
+        hashMap.put("bearing", "");
+        hashMap.put("elapsed_realtime_nanos", "");
+        hashMap.put("extras", "");
+        hashMap.put("latitude", "");
+        hashMap.put("longitude", "");
+        hashMap.put("provider", "");
+        hashMap.put("speed", "");
+        hashMap.put("time", "");
+        return new Gson().toJson(hashMap);
+    }
+
+    private String get_location_params_json(Location location) {
         HashMap<String, String> hashMap = new HashMap<String, String>();
         hashMap.put("accuracy", String.valueOf(location.getAccuracy()));
         hashMap.put("altitude", String.valueOf(location.getAltitude()));
@@ -80,7 +102,7 @@ public class ShakeHandler implements ShakeDetector.Listener {
         params.put(param_name, param);
     }
 
-    public void add_http_param(String param_name, ParamGetter pg){
+    public void add_http_param(String param_name, ParamGetter pg) {
         params.put(param_name, pg.get_param_value(pg.t));
     }
 
@@ -93,7 +115,7 @@ public class ShakeHandler implements ShakeDetector.Listener {
     }
 
     private void post() {
-        if(task != null) {
+        if (task != null) {
             Log.d(TAG, "task no null");
             return;
         }
@@ -130,7 +152,7 @@ public class ShakeHandler implements ShakeDetector.Listener {
                 request = requests[0];
                 request.form(postParams);
                 Boolean ok = request.ok();
-                if(ok)
+                if (ok)
                     result = request.body();
                 return ok;
             }
@@ -141,7 +163,7 @@ public class ShakeHandler implements ShakeDetector.Listener {
         protected void onPostExecute(Boolean aBoolean) {
             if (aBoolean) {
                 Log.d(TAG, "ok()");
-                if(callbackListener != null)
+                if (callbackListener != null)
                     callbackListener.callback(result);
             } else {
                 Log.d(TAG, "not ok");
