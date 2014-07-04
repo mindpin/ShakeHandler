@@ -26,6 +26,7 @@ public class ShakeHandler implements ShakeDetector.Listener {
     SensorManager sensorManager;
     ShakeDetector sd;
     Map<String, String> params, postParams;
+    AsyncTask task = null;
 
     public interface CallbackListener {
         public void callback(String json);
@@ -92,6 +93,10 @@ public class ShakeHandler implements ShakeDetector.Listener {
     }
 
     private void post() {
+        if(task != null) {
+            Log.d(TAG, "task no null");
+            return;
+        }
         if (url == null)
             throw new Error("no url");
         HttpRequest request = HttpRequest.post(url);
@@ -100,7 +105,7 @@ public class ShakeHandler implements ShakeDetector.Listener {
         postParams = new HashMap<String, String>(params);
         postParams.put("location", get_location_params());
         Log.d(TAG, "postParams:" + new Gson().toJson(postParams));
-        new RequestTask().execute(request);
+        task = new RequestTask().execute(request);
     }
 
     public Location get_location() {
@@ -142,6 +147,7 @@ public class ShakeHandler implements ShakeDetector.Listener {
                 Log.d(TAG, "not ok");
                 // error
             }
+            task = null;
         }
     }
 }
