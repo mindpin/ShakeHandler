@@ -28,8 +28,11 @@ public class ShakeHandler implements ShakeDetector.Listener {
     Map<String, String> params, postParams;
     AsyncTask task = null;
 
-    public interface CallbackListener {
-        public void callback(String json);
+    public ShakeHandler(Context context) {
+        this.context = context;
+        sensorManager = (SensorManager) context.getSystemService(Activity.SENSOR_SERVICE);
+        sd = new ShakeDetector(this);
+        params = new HashMap<String, String>();
     }
 
     public String get_location_params() {
@@ -73,18 +76,10 @@ public class ShakeHandler implements ShakeDetector.Listener {
         return new Gson().toJson(hashMap);
     }
 
-    public ShakeHandler(Context context) {
-        this.context = context;
-        sensorManager = (SensorManager) context.getSystemService(Activity.SENSOR_SERVICE);
-        sd = new ShakeDetector(this);
-        params = new HashMap<String, String>();
-    }
-
     @Override
     public void hearShake() {
         post();
     }
-
 
     public void start_preview() {
         sd.start(sensorManager);
@@ -116,7 +111,7 @@ public class ShakeHandler implements ShakeDetector.Listener {
 
     private void post() {
         if (task != null) {
-            Log.d(TAG, "task no null");
+//            Log.d(TAG, "task no null");
             return;
         }
         if (url == null)
@@ -126,7 +121,7 @@ public class ShakeHandler implements ShakeDetector.Listener {
             request.header("Cookie", cookie);
         postParams = new HashMap<String, String>(params);
         postParams.put("location", get_location_params());
-        Log.d(TAG, "postParams:" + new Gson().toJson(postParams));
+//        Log.d(TAG, "postParams:" + new Gson().toJson(postParams));
         task = new RequestTask().execute(request);
     }
 
@@ -140,6 +135,10 @@ public class ShakeHandler implements ShakeDetector.Listener {
                     .getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
         }
         return location;
+    }
+
+    public interface CallbackListener {
+        public void callback(String json);
     }
 
     private class RequestTask extends AsyncTask<HttpRequest, Long, Boolean> {
@@ -162,11 +161,11 @@ public class ShakeHandler implements ShakeDetector.Listener {
         @Override
         protected void onPostExecute(Boolean aBoolean) {
             if (aBoolean) {
-                Log.d(TAG, "ok()");
+//                Log.d(TAG, "ok()");
                 if (callbackListener != null)
                     callbackListener.callback(result);
             } else {
-                Log.d(TAG, "not ok");
+//                Log.d(TAG, "not ok");
                 // error
             }
             task = null;

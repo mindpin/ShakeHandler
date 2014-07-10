@@ -1,15 +1,12 @@
 package com.mindpin.android.shakehandler.samples;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.app.Activity;
-
 import android.util.Log;
 import com.mindpin.android.shakehandler.ParamGetter;
 import com.mindpin.android.shakehandler.ShakeHandler;
 import com.mindpin.android.shakehandler.samples.model.Book;
-
-import java.util.Map;
 
 public class ShakeHandlerActivity extends Activity {
     private static final String TAG = "ShakeHandlerActivity";
@@ -41,7 +38,7 @@ public class ShakeHandlerActivity extends Activity {
 
         sh.set_callback_listener(new ShakeHandler.CallbackListener() {
             public void callback(String json) {
-                Log.d(TAG, "callback json:" + json);
+//                Log.d(TAG, "callback json:" + json);
                 Intent intent = new Intent(ShakeHandlerActivity.this, ResultActivity.class);
                 intent.putExtra("result", json);
                 startActivity(intent);
@@ -57,7 +54,7 @@ public class ShakeHandlerActivity extends Activity {
 
     @Override
     protected void onPause() {
-        super.onPause();
         sh.stop_preview();
+        super.onPause();
     }
 }
